@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo_Vuejs</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todolist VueJS 33</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -37,57 +36,64 @@
 </style>
 
 <body style=" margin: auto;width: 50%;">
-
-    <div class="card bg">
-        <div class="card-header text-center">
-            <h1 style="color: #fff;font-weight: bold;">Todo list</h1>
-        </div>
-        <div class="card-body">
-            <div id="app">
-                <div>
-                    <input type="text" id="input" v-model="newItem" style="width:100%; padding: 7px 15px">
+    <div class="container">
+        <div class="card bg">
+            <div class="card-header text-center">
+                <h1 style="color: #fff;font-weight: bold;">Todo list</h1>
+            </div>
+            <div class="card-body">
+                <div id="app">
+                    <div>
+                        <input type="text" id="input" v-model="task" style="width:100%; padding: 7px 15px">
+                    </div>
+                    <br>
+                    <div class="text-center">
+                        <button v-on:click="addTask()" class="btn btn-warning">Thêm mới</button>
+                    </div>
+                    <br>
+                    <div>
+                        <ul class="style_li">
+                            <li v-for="task in tasks">{{ task.name }}
+                                <span class="pull-right"><i v-on:click.prevent="removeTask(task)" class="fa fa-trash-o" aria-hidden="true" style="color: #fff;"></i></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
                 </div>
-                <br>
-                <div class="text-center">
-                    <button v-on:click="addItem" class="btn btn-warning">Thêm mới</button>
-                </div>
-                <br>
-                <div>
-                    <ul class="style_li">
-                        <li v-for="(item,index) in noidung" :key="index">{{ item }}
-                            <span class="pull-right"><i @click="deleteFromList(index)" class="fa fa-trash-o" aria-hidden="true" style="color: #fff;"></i></span>
-                        </li>
-                    </ul>
-                </div>
-                <br>
             </div>
         </div>
     </div>
-
-
-
-
-
-
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    tasks: [],
+                    task: "",
+                };
+            },
+            created() {
+                this.tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            },
+            methods: {
+                addTask() {
+                    this.tasks.push({
+                        id: Date.now(),
+                        name: this.task,
+                    });
+                    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+                    this.task = "";
+                },
+                removeTask(task) {
+                    let newTasks = this.tasks.filter(function(item) {
+                        return task.id !== item.id;
+                    });
+                    this.tasks = newTasks;
+                    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+                },
+            },
+        }).mount("#app");
+    </script>
 </body>
-<script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            noidung: []
-        },
-        methods: {
-            addItem() {
-                this.noidung.push(this.newItem);
-                this.newItem = '';
-            },
-            deleteFromList(index) {
-                this.noidung.splice(index, 1);
-            },
-        }
-    });
-</script>
-
-
 
 </html>
